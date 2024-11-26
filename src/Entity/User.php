@@ -1,15 +1,18 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,11 +22,14 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
 
     /**
      * @var Collection<int, Team>
@@ -41,6 +47,7 @@ class User
     {
         $this->teams = new ArrayCollection();
         $this->assignedTasks = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): ?int
@@ -56,7 +63,6 @@ class User
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -68,7 +74,6 @@ class User
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -80,8 +85,30 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Optionnel : effacer des données sensibles temporaires
     }
 
     /**
@@ -98,7 +125,6 @@ class User
             $this->teams->add($team);
             $team->addMember($this);
         }
-
         return $this;
     }
 
@@ -107,7 +133,6 @@ class User
         if ($this->teams->removeElement($team)) {
             $team->removeMember($this);
         }
-
         return $this;
     }
 
@@ -125,19 +150,16 @@ class User
             $this->assignedTasks->add($assignedTask);
             $assignedTask->setAssignedTo($this);
         }
-
         return $this;
     }
 
     public function removeAssignedTask(Task $assignedTask): static
     {
         if ($this->assignedTasks->removeElement($assignedTask)) {
-            // set the owning side to null (unless already changed)
             if ($assignedTask->getAssignedTo() === $this) {
                 $assignedTask->setAssignedTo(null);
             }
         }
-
         return $this;
     }
 }
