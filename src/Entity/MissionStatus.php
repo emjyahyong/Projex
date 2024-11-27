@@ -1,7 +1,7 @@
 <?php
 namespace App\Entity;
 
-enum MissionStatus:string
+enum MissionStatus: string
 {
     case STATUS_PENDING = 'PENDING';
     case STATUS_IN_PROGRESS = 'IN_PROGRESS';

@@ -16,6 +16,21 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
+    /**
+     * Trouve les tâches assignées à un utilisateur donné
+     *
+     * @param int $userId
+     * @return Task[]
+     */
+    public function findByAssignedUser(int $userId): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.assignedTo = :userId') // Filtrer par l'utilisateur assigné
+            ->setParameter('userId', $userId);
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Task[] Returns an array of Task objects
 //     */

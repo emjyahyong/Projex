@@ -23,7 +23,7 @@
                 <td>{{ task.id }}</td>
                 <td>{{ task.title }}</td>
                 <td>{{ task.description }}</td>
-                <td>{{ task.status }}</td>
+                <td>{{ task.status.name }}</td>
                 <td>{{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ task.endAt ? task.endAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
