@@ -16,16 +16,18 @@ class TeamType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('isActive')
             ->add('members', EntityType::class, [
                 'class' => User::class,
-'choice_label' => 'id',
-'multiple' => true,
+                'choice_label' => 'name',
+                'choice_value' => 'id',
+                'multiple' => true,
             ])
-            ->add('currentProject', EntityType::class, [
-                'class' => Project::class,
-'choice_label' => 'id',
-            ])
+            // ->add('currentProject', EntityType::class, [
+            //     'class' => Project::class,
+            //     'choice_label' => 'name',
+            //     'choice_value' => 'id',
+            //     'multiple' => true,
+            // ])
         ;
     }
 

@@ -5,35 +5,31 @@
 {% block body %}
     <h1>Team index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>IsActive</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         {% for team in teams %}
-            <tr>
-                <td>{{ team.id }}</td>
-                <td>{{ team.name }}</td>
-                <td>{{ team.isActive ? 'Yes' : 'No' }}</td>
-                <td>{{ team.createdAt ? team.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_team_show', {'id': team.id}) }}">show</a>
-                    <a href="{{ path('app_team_edit', {'id': team.id}) }}">edit</a>
-                </td>
-            </tr>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ team.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">ID: {{ team.id }}</h6>
+                        <p class="card-text">
+                            <strong>Active:</strong> {{ team.isActive ? 'Yes' : 'No' }}
+                        </p>
+                        <p class="card-text">
+                            <strong>CreatedAt:</strong> {{ team.createdAt ? team.createdAt|date('Y-m-d H:i:s') : 'Not available' }}
+                        </p>
+                        <a href="{{ path('app_team_show', {'id': team.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+                        <a href="{{ path('app_team_edit', {'id': team.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
+                        {{ include('team/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+            <div class="col-12">
+                <p>Aucune équipe trouvée.</p>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
-    <a href="{{ path('app_team_new') }}">Create new</a>
+    <a href="{{ path('app_team_new') }}" class="btn btn-success mt-4">Créer une nouvelle équipe</a>
 {% endblock %}

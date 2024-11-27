@@ -5,39 +5,37 @@
 {% block body %}
     <h1>Task index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>StartAt</th>
-                <th>EndAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row">
         {% for task in tasks %}
-            <tr>
-                <td>{{ task.id }}</td>
-                <td>{{ task.title }}</td>
-                <td>{{ task.description }}</td>
-                <td>{{ task.status.name }}</td>
-                <td>{{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ task.endAt ? task.endAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_task_show', {'id': task.id}) }}">show</a>
-                    <a href="{{ path('app_task_edit', {'id': task.id}) }}">edit</a>
-                </td>
-            </tr>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ task.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">ID: {{ task.id }}</h6>
+                        <p class="card-text">
+                            <strong>Description:</strong> {{ task.description }}
+                        </p>
+                        <p class="card-text">
+                            <strong>Status:</strong> {{ task.status.name }}
+                        </p>
+                        <p class="card-text">
+                            <strong>StartAt:</strong> {{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : 'Not started yet' }}
+                        </p>
+                        <p class="card-text">
+                            <strong>EndAt:</strong> {{ task.endAt ? task.endAt|date('Y-m-d H:i:s') : 'Not finished yet' }}
+                        </p>
+                        <a href="{{ path('app_task_show', {'id': task.id}) }}" class="btn btn-primary btn-sm">Voir</a>
+                        <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
+                        {{ include('task/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
+            <div class="col-12">
+                <p>Aucune tâche trouvée.</p>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
-    <a href="{{ path('app_task_new') }}">Create new</a>
+    <a href="{{ path('app_task_new') }}" class="btn btn-success mt-4">Créer une nouvelle tâche</a>
 {% endblock %}

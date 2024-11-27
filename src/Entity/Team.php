@@ -37,6 +37,7 @@ class Team
     private Collection $members;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Project $currentProject = null;
 
     public function __construct()

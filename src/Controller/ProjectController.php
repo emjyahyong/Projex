@@ -33,7 +33,7 @@ final class ProjectController extends AbstractController{
 
         // Récupérer les projets associés aux équipes de cet utilisateur
         $projects = $projectRepository->findByUserTeams($userId);
-
+        
         return $this->render('project/index.html.twig', [
             'projects' => $projects,
         ]);
@@ -89,6 +89,15 @@ final class ProjectController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $team = $project->getTeam(); // Assure-toi que tu as un setter/getter pour l'équipe
+
+            if ($team) {
+                // Activer l'équipe
+                $team->setActive(true);
+                // Associer ce projet comme le projet actuel de l'équipe
+                $team->setCurrentProject($project);
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);

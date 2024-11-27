@@ -18,7 +18,8 @@ class ProjectType extends AbstractType
             ->add('description')
             ->add('team', EntityType::class, [
                 'class' => Team::class,
-'choice_label' => 'id',
+                'choice_label' => 'name',
+                'choice_value' => 'id'
             ])
         ;
     }
