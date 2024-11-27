@@ -17,9 +17,6 @@ class TeamType extends AbstractType
         $builder
             ->add('name')
             ->add('isActive')
-            ->add('createdAt', null, [
-                'widget' => 'single_text'
-            ])
             ->add('members', EntityType::class, [
                 'class' => User::class,
 'choice_label' => 'id',

@@ -16,6 +16,22 @@ class TeamRepository extends ServiceEntityRepository
         parent::__construct($registry, Team::class);
     }
 
+    /**
+     * Trouve les équipes associées à l'utilisateur donné
+     *
+     * @param int $userId
+     * @return Team[]
+     */
+    public function findByUser(int $userId): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->join('t.members', 'u') // Jointure sur les membres de l'équipe
+            ->where('u.id = :userId') // Filtrer par l'ID de l'utilisateur
+            ->setParameter('userId', $userId);
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Team[] Returns an array of Team objects
 //     */

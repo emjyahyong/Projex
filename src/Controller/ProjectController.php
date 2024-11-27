@@ -2,22 +2,40 @@
 
 namespace App\Controller;
 
+use App\Entity\Team;
+use App\Entity\User;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Exception\LogicException;
 
 #[Route('/project')]
 final class ProjectController extends AbstractController{
     #[Route(name: 'app_project_index', methods: ['GET'])]
-    public function index(ProjectRepository $projectRepository): Response
+    public function index(Security $security, ProjectRepository $projectRepository): Response
     {
+        // Récupérer l'utilisateur connecté
+        $user = $security->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos projets.');
+        }
+
+        // Récupérer l'ID de l'utilisateur connecté
+        $userId = $user->getId();
+
+        // Récupérer les projets associés aux équipes de cet utilisateur
+        $projects = $projectRepository->findByUserTeams($userId);
+
         return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findAll(),
+            'projects' => $projects,
         ]);
     }
 
@@ -29,6 +47,20 @@ final class ProjectController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Définir la date de création du projet
+            $project->setCreatedAt(new \DateTime());
+
+            // Récupérer l'équipe liée au projet
+            $team = $project->getTeam(); // Assure-toi que tu as un setter/getter pour l'équipe
+
+            if ($team) {
+                // Activer l'équipe
+                $team->setActive(true);
+                // Associer ce projet comme le projet actuel de l'équipe
+                $team->setCurrentProject($project);
+            }
+
+            // Enregistrer le projet et l'équipe
             $entityManager->persist($project);
             $entityManager->flush();
 
@@ -40,6 +72,7 @@ final class ProjectController extends AbstractController{
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_project_show', methods: ['GET'])]
     public function show(Project $project): Response

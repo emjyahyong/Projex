@@ -6,18 +6,32 @@ use App\Entity\Team;
 use App\Form\TeamType;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/team')]
 final class TeamController extends AbstractController{
     #[Route(name: 'app_team_index', methods: ['GET'])]
-    public function index(TeamRepository $teamRepository): Response
+    public function index(Security $security, TeamRepository $teamRepository): Response
     {
+        // Récupérer l'utilisateur connecté
+        $user = $security->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos équipes.');
+        }
+
+        // Récupérer l'ID de l'utilisateur connecté
+        $userId = $user->getId();
+
+        // Récupérer les équipes auxquelles appartient l'utilisateur connecté
+        $teams = $teamRepository->findByUser($userId);
+
         return $this->render('team/index.html.twig', [
-            'teams' => $teamRepository->findAll(),
+            'teams' => $teams,
         ]);
     }
 
@@ -29,6 +43,7 @@ final class TeamController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $team->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($team);
             $entityManager->flush();
 

@@ -19,7 +19,7 @@ class Team
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?bool $isActive = null;
+    private ?bool $isActive = false;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;

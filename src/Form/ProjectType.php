@@ -16,9 +16,6 @@ class ProjectType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('createdAt', null, [
-                'widget' => 'single_text'
-            ])
             ->add('team', EntityType::class, [
                 'class' => Team::class,
 'choice_label' => 'id',

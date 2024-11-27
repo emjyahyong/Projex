@@ -16,6 +16,23 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
+    /**
+     * Trouve les projets associés aux équipes de l'utilisateur
+     *
+     * @param int $userId
+     * @return Project[]
+     */
+    public function findByUserTeams(int $userId): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->join('p.team', 't') // Jointure sur l'équipe
+            ->join('t.members', 'u') // Jointure sur les membres de l'équipe
+            ->where('u.id = :userId') // Filtrer par l'ID de l'utilisateur
+            ->setParameter('userId', $userId);
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Project[] Returns an array of Project objects
 //     */
