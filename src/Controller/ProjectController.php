@@ -110,13 +110,27 @@ final class ProjectController extends AbstractController{
     }
 
     #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]
-    public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($project);
-            $entityManager->flush();
+public function delete(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+{
+    // Vérification du token CSRF
+    if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->request->get('_token'))) {
+        
+        // Mettre à jour les équipes qui ont ce projet comme currentProject
+        $teams = $entityManager->getRepository(Team::class)->findBy(['currentProject' => $project]);
+
+        foreach ($teams as $team) {
+            // On met à jour le champ currentProject à null pour chaque équipe concernée
+            $team->setCurrentProject(null);
+            $entityManager->persist($team);
         }
 
-        return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+        // Supprimer le projet
+        $entityManager->remove($project);
+        $entityManager->flush();
     }
+
+    // Redirection après suppression
+    return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
+}
+
 }

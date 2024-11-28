@@ -12,23 +12,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TeamType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void 
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'label' => 'Nom'
+            ])
             ->add('members', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'name',
+                'choice_label' => 'name', // Utilisez 'nom' si c'est le nom de votre attribut
                 'choice_value' => 'id',
                 'multiple' => true,
-            ])
-            // ->add('currentProject', EntityType::class, [
-            //     'class' => Project::class,
-            //     'choice_label' => 'name',
-            //     'choice_value' => 'id',
-            //     'multiple' => true,
-            // ])
-        ;
+                'label' => 'Membres'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -11,16 +11,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options): void 
     {
         $builder
-            ->add('name')
-            ->add('email')
-            ->add('password')
+            ->add('name', null, [
+                'label' => 'Nom'
+            ])
+            ->add('email', null, [
+                'label' => 'Adresse électronique'
+            ])
+            ->add('password', null, [
+                'label' => 'Mot de passe'
+            ])
             ->add('teams', EntityType::class, [
-                'class' => Team::class,
-'choice_label' => 'id',
-'multiple' => true,
+                'class' => Team::class, 
+                'choice_label' => 'name', // Changé de 'id' à 'name' pour afficher le nom de l'équipe
+                'multiple' => true,
+                'label' => 'Équipes'
             ])
         ;
     }

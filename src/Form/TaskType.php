@@ -14,43 +14,49 @@ use Symfony\Component\Form\Extension\Core\Type\EnumType;
 
 class TaskType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-{
-    $builder
-        ->add('title')
-        ->add('description')
-        ->add('status', EnumType::class, [
-            'class' => MissionStatus::class,
-            'choice_label' => function(MissionStatus $status) {
-                // Personnalisation des libellés de statut
-                return match($status) {
-                    MissionStatus::STATUS_PENDING => 'En attente',
-                    MissionStatus::STATUS_IN_PROGRESS => 'En cours',
-                    MissionStatus::STATUS_COMPLETED => 'Terminé',
-                    MissionStatus::STATUS_FAILED => 'Échoué',
-                    // Ajoutez d'autres cas si nécessaire
-                };
-            }
-        ])
-        ->add('startAt', null, [
-            'widget' => 'single_text'
-        ])
-        ->add('endAt', null, [
-            'widget' => 'single_text'
-        ])
-        ->add('project', EntityType::class, [
-            'class' => Project::class,
-            'choice_label' => 'name',
-            'choice_value' => 'id'
-        ])
-        ->add('assignedTo', EntityType::class, [
-            'class' => User::class,
-            'choice_label' => 'name',
-            'choice_value' => 'id'
-        ])
-    ;
-}
-
+    public function buildForm(FormBuilderInterface $builder, array $options): void 
+    {
+        $builder
+            ->add('title', null, [
+                'label' => 'Titre'
+            ])
+            ->add('description', null, [
+                'label' => 'Description'
+            ])
+            ->add('status', EnumType::class, [
+                'class' => MissionStatus::class,
+                'label' => 'Statut',
+                'choice_label' => function(MissionStatus $status) {
+                    return match($status) {
+                        MissionStatus::STATUS_PENDING => 'En attente',
+                        MissionStatus::STATUS_IN_PROGRESS => 'En cours',
+                        MissionStatus::STATUS_COMPLETED => 'Terminé',
+                        MissionStatus::STATUS_FAILED => 'Échoué',
+                    };
+                }
+            ])
+            ->add('startAt', null, [
+                'widget' => 'single_text',
+                'label' => 'Date de début'
+            ])
+            ->add('endAt', null, [
+                'widget' => 'single_text', 
+                'label' => 'Date de fin'
+            ])
+            ->add('project', EntityType::class, [
+                'class' => Project::class,
+                'choice_label' => 'name',
+                'choice_value' => 'id',
+                'label' => 'Projet'
+            ])
+            ->add('assignedTo', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'name',
+                'choice_value' => 'id',
+                'label' => 'Assigné à'
+            ])
+        ;
+    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
