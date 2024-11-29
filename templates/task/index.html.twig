@@ -11,15 +11,15 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ task.title }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">ID: {{ task.id }}</h6>
+                        {# <h6 class="card-subtitle mb-2 text-muted">ID: {{ task.id }}</h6> #}
                         <p class="card-text">
-                            <strong>Description:</strong> {{ task.description }}
+                            <strong>Description :</strong> {{ task.description }}
                         </p>
                         <p class="card-text">
-                            <strong>Status:</strong> {{ task.status.name }}
+                            <strong>Statut :</strong> {{ task.status.name }}
                         </p>
                         <p class="card-text">
-                            <strong>StartAt:</strong> {{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : 'Not started yet' }}
+                            <strong>Commencé à :</strong> {{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : 'Not started yet' }}
                         </p>
                         <p class="card-text">
                             <strong>EndAt:</strong> {{ task.endAt ? task.endAt|date('Y-m-d H:i:s') : 'Not finished yet' }}

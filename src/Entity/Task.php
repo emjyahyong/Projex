@@ -26,7 +26,7 @@ class Task
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $startAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)] 
     private ?\DateTimeInterface $endAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]

@@ -23,6 +23,30 @@
                 <th>CreatedAt</th>
                 <td>{{ project.createdAt ? project.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
+            <tr>
+                <th>Task Count</th>
+                <td>{{ taskCount }}</td>
+            </tr>
+            <tr>
+                <th>Pending Tasks</th>
+                <td>{{ pendingCount }}</td>
+            </tr>
+            <tr>
+                <th>In Progress Tasks</th>
+                <td>{{ inProgressCount }}</td>
+            </tr>
+            <tr>
+                <th>Completed Tasks</th>
+                <td>{{ completedCount }}</td>
+            </tr>
+            <tr>
+                <th>Failed Tasks</th>
+                <td>{{ failedCount }}</td>
+            </tr>
+            <tr>
+                <th>Completion Percentage</th>
+                <td>{{ completionPercentage|number_format(2) }}%</td>
+            </tr>
         </tbody>
     </table>
 

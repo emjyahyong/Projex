@@ -37,24 +37,31 @@ final class TaskController extends AbstractController{
     }
 
     #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager): Response
-{
-    $task = new Task();
-    $form = $this->createForm(TaskType::class, $task);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($task);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $task = new Task();
+    
+        // Définir des valeurs par défaut
+        $task->setStatus(MissionStatus::STATUS_PENDING); // Par défaut 'En attente'
+        $task->setStartAt(new \DateTime()); // Par défaut la date actuelle
+        // $task->setEndAt(null); // Par défaut 'endAt' est null
+    
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($task);
+            $entityManager->flush();
+    
+            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        }
+    
+        return $this->render('task/new.html.twig', [
+            'task' => $task,
+            'form' => $form->createView(),
+        ]);
     }
-
-    return $this->render('task/new.html.twig', [
-        'task' => $task,
-        'form' => $form->createView(),
-    ]);
-}
+    
 
 
     #[Route('/{id}', name: 'app_task_show', methods: ['GET'])]

@@ -33,6 +33,20 @@ class ProjectRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Récupérer les projets par équipe
+     * 
+     * @param Team[] $teams
+     * @return Project[]
+     */
+    public function findByTeams(array $teams): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.team IN (:teams)')
+            ->setParameter('teams', $teams)
+            ->getQuery()
+            ->getResult();
+    }
 //    /**
 //     * @return Project[] Returns an array of Project objects
 //     */
