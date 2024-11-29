@@ -39,9 +39,11 @@
 
                         <div class="form-check mb-4">
                             <input type="checkbox" name="_remember_me" id="remember_me" class="form-check-input">
-                            <label class="form-check-label" for="remember_me">Se connecter</label>
+                            <label class="form-check-label" for="remember_me">Se souvenir de moi</label>
                         </div>
-
+                        
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        
                         <button class="btn btn-lg btn-gradient-primary w-100 px-4 py-2" type="submit">
                             Connexion
                         </button>

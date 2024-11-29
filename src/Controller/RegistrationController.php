@@ -35,10 +35,7 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
             
-            // A MODIFIERRRRRRRRR
-            return $this->render('registration/register.html.twig', [
-                'registrationForm' => $form,
-            ]);
+            return $this->redirectToRoute('app_project_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('registration/register.html.twig', [
