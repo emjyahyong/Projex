@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Team index{% endblock %}
+{% block title %}Équipes{% endblock %}
 
 {% block body %}
-    <h1>Team index</h1>
+    <h1>Liste des équipes</h1>
 
     <div class="row">
         {% for team in teams %}
@@ -11,16 +11,20 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ team.name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">ID: {{ team.id }}</h6>
+                        {# <h6 class="card-subtitle mb-2 text-muted">ID: {{ team.id }}</h6> #}
                         <p class="card-text">
-                            <strong>Active:</strong> {{ team.isActive ? 'Yes' : 'No' }}
+                            Équipe {{ team.isActive ? 'active' : 'inactive' }}
                         </p>
                         <p class="card-text">
-                            <strong>CreatedAt:</strong> {{ team.createdAt ? team.createdAt|date('Y-m-d H:i:s') : 'Not available' }}
+                            <small class="text-muted">
+                                Créé le : {{ team.createdAt ? team.createdAt|date('j F Y') : 'Not available' }}
+                            </small>
                         </p>
-                        <a href="{{ path('app_team_show', {'id': team.id}) }}" class="btn btn-primary btn-sm">Voir</a>
-                        <a href="{{ path('app_team_edit', {'id': team.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
-                        {{ include('team/_delete_form.html.twig') }}
+                        <div class="d-flex justify-content-start">
+                            <a href="{{ path('app_team_show', {'id': team.id}) }}" class="btn btn-primary btn-sm me-2">Voir</a>
+                            <a href="{{ path('app_team_edit', {'id': team.id}) }}" class="btn btn-primary btn-sm me-2">Modifier</a>
+                            {{ include('team/_delete_form.html.twig') }}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Task index{% endblock %}
+{% block title %}Tâches{% endblock %}
 
 {% block body %}
-    <h1>Task index</h1>
+    <h1>Liste des tâches</h1>
 
     <div class="row">
         {% for task in tasks %}
@@ -11,22 +11,45 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ task.title }}</h5>
-                        {# <h6 class="card-subtitle mb-2 text-muted">ID: {{ task.id }}</h6> #}
+                        {# Affichage de la description de la tâche #}
                         <p class="card-text">
-                            <strong>Description :</strong> {{ task.description }}
+                            {{ task.description }}
                         </p>
+
                         <p class="card-text">
-                            <strong>Statut :</strong> {{ task.status.name }}
+                            <strong>Statut :</strong>
+                            {# Vérification du statut de la tâche et affichage du texte approprié #}
+                            {% if task.status and task.status.name == 'STATUS_COMPLETED' %}
+                                Terminée
+                            {% elseif task.status and task.status.name == 'STATUS_PENDING' %}
+                                En attente
+                            {% elseif task.status and task.status.name == 'STATUS_IN_PROGRESS' %}
+                                En cours
+                            {% elseif task.status and task.status.name == 'STATUS_FAILED' %}
+                                Échouée
+                            {% else %}
+                                {{ task.status ? task.status.name : 'Non défini' }}
+                            {% endif %}
                         </p>
+
                         <p class="card-text">
-                            <strong>Commencé à :</strong> {{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : 'Not started yet' }}
+                            <small class="text-muted">
+                                    Créé le : {{ task.startAt ? task.startAt|date('j F Y') : 'Non disponible' }}
+                            </small>
                         </p>
-                        <p class="card-text">
-                            <strong>EndAt:</strong> {{ task.endAt ? task.endAt|date('Y-m-d H:i:s') : 'Not finished yet' }}
-                        </p>
-                        <a href="{{ path('app_task_show', {'id': task.id}) }}" class="btn btn-primary btn-sm">Voir</a>
-                        <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
-                        {{ include('task/_delete_form.html.twig') }}
+
+                        {# Afficher la date de fin seulement si elle n'est pas null #}
+                        {% if task.endAt is not null %}
+                            <p class="card-text">
+                                <small class="text-muted">Terminée le : {{ task.endAt|date('j F Y') }}</small>
+                            </p>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-start">
+                            <a href="{{ path('app_task_show', {'id': task.id}) }}" class="btn btn-primary btn-sm me-2">Voir</a>
+                            <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="btn btn-primary btn-sm me-2">Modifier</a>
+                            {{ include('task/_delete_form.html.twig') }}
+                        </div>
                     </div>
                 </div>
             </div>

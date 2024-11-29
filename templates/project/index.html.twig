@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Project index{% endblock %}
+{% block title %}Projets{% endblock %}
 
 {% block body %}
-    <h1>Project index</h1>
+    <h1>Liste des projets</h1>
 
     <div class="row">
         {% for project in projects %}
@@ -11,16 +11,18 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ project.name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">ID: {{ project.id }}</h6>
+                        {# <h6 class="card-subtitle mb-2 text-muted">ID: {{ project.id }}</h6> #}
                         <p class="card-text">
                             {{ project.description }}
                         </p>
                         <p class="card-text">
-                            <small class="text-muted">Créé le: {{ project.createdAt ? project.createdAt|date('Y-m-d H:i:s') : '' }}</small>
+                            <small class="text-muted">Créé le: {{ project.createdAt ? project.createdAt|date('j F Y') : '' }}</small>
                         </p>
-                        <a href="{{ path('app_project_show', {'id': project.id}) }}" class="btn btn-primary btn-sm">Voir</a>
-                        <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
-                        {{ include('project/_delete_form.html.twig') }}
+                        <div class="d-flex justify-content-start">
+                            <a href="{{ path('app_project_show', {'id': project.id}) }}" class="btn btn-primary btn-sm me-2">Voir</a>
+                            <a href="{{ path('app_project_edit', {'id': project.id}) }}" class="btn btn-primary btn-sm me-2">Modifier</a>
+                            {{ include('project/_delete_form.html.twig') }}
+                        </div>
                     </div>
                 </div>
             </div>

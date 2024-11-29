@@ -1,42 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Task{% endblock %}
+{% block title %}Tâche{% endblock %}
 
 {% block body %}
-    <h1>Task</h1>
+    <h1>{{ task.title }}</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ task.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ task.title }}</td>
-            </tr>
             <tr>
                 <th>Description</th>
                 <td>{{ task.description }}</td>
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ task.status }}</td>
+                <td>
+                    {% if task.status and task.status.name == 'STATUS_COMPLETED' %}
+                        Terminée
+                    {% elseif task.status and task.status.name == 'STATUS_PENDING' %}
+                        En attente
+                    {% elseif task.status and task.status.name == 'STATUS_IN_PROGRESS' %}
+                        En cours
+                    {% elseif task.status and task.status.name == 'STATUS_FAILED' %}
+                        Échouée
+                    {% else %}
+                        {{ task.status ? task.status.name : 'Non défini' }}
+                    {% endif %}
+                </td>
             </tr>
             <tr>
-                <th>StartAt</th>
-                <td>{{ task.startAt ? task.startAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Commencée le :</th>
+                <td>{{ task.startAt ? task.startAt|date('j F Y') : '' }}</td>
             </tr>
-            <tr>
-                <th>EndAt</th>
-                <td>{{ task.endAt ? task.endAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
+            {% if task.endAt is not null %}
+                <tr>
+                    <th>Terminée le :</th>
+                    <td>{{ task.endAt ? task.endAt|date('j F Y') : '' }}</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_task_index') }}">back to list</a>
+    <div class="d-flex justify-content-start">
+        <a href="{{ path('app_task_index') }}" class="btn btn-secondary btn-sm me-2">Retour à la liste</a>
+        <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="btn btn-primary btn-sm me-2">Modifier</a>
+        
+        {# Afficher les boutons de changement de statut en fonction de l'état actuel de la tâche #}
+        {% if task.status.name == 'STATUS_IN_PROGRESS' %}
+            <a href="{{ path('app_task_change_status', {'id': task.id, 'status': 'PENDING'}) }}" class="btn btn-warning btn-sm me-2">Mettre en attente</a>
+        {% elseif task.status.name == 'STATUS_PENDING' %}
+            <a href="{{ path('app_task_change_status', {'id': task.id, 'status': 'IN_PROGRESS'}) }}" class="btn btn-success btn-sm me-2">Reprendre la tâche</a>
+        {% endif %}
 
-    <a href="{{ path('app_task_edit', {'id': task.id}) }}">edit</a>
-
-    {{ include('task/_delete_form.html.twig') }}
+        {# Afficher les boutons Marquer comme terminée et Marquer comme échouée si la tâche est en cours ou en attente #}
+        {% if task.status.name in ['STATUS_PENDING', 'STATUS_IN_PROGRESS'] %}
+            <a href="{{ path('app_task_change_status', {'id': task.id, 'status': 'COMPLETED'}) }}" class="btn btn-success btn-sm me-2">Marquer comme terminée</a>
+            <a href="{{ path('app_task_change_status', {'id': task.id, 'status': 'FAILED'}) }}" class="btn btn-danger btn-sm me-2">Marquer comme échouée</a>
+        {% endif %}
+        
+        {{ include('task/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

@@ -1,20 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-lg rounded-3">
+                <div class="card-header bg-gradient-to-r from-green-400 to-teal-500 text-black text-center py-4 rounded-top">
+                    <h3 class="mb-0">Créer un compte</h3>
+                </div>
+                <div class="card-body p-4">
+                    {# Afficher les erreurs de formulaire #}
+                    {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+                    {# Début du formulaire #}
+                    {{ form_start(registrationForm) }}
+                    
+                    <div class="form-group mb-4">
+                        {{ form_label(registrationForm.name, 'Nom', {'label_attr': {'class': 'form-label fw-bold text-muted'}}) }}
+                        {{ form_widget(registrationForm.name, {'attr': {'class': 'form-control form-control-lg shadow-sm'}}) }}
+                        {{ form_errors(registrationForm.name) }}
+                    </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.name) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                    <div class="form-group mb-4">
+                        {{ form_label(registrationForm.email, 'Adresse e-mail', {'label_attr': {'class': 'form-label fw-bold text-muted'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control form-control-lg shadow-sm'}}) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    <div class="form-group mb-4">
+                        {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label fw-bold text-muted'}}) }}
+                        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control form-control-lg shadow-sm'}}) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+
+                    <div class="form-check mb-4">
+                        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                        {{ form_label(registrationForm.agreeTerms, 'Accepter les conditions', {'label_attr': {'class': 'form-check-label fw-bold'}}) }}
+                        {{ form_errors(registrationForm.agreeTerms) }}
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-gradient-success w-100 px-4 py-2">S'inscrire</button>
+                    </div>
+
+                    {{ form_end(registrationForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

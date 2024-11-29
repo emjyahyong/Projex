@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Task{% endblock %}
+{% block title %}Modifier une tâche{% endblock %}
 
 {% block body %}
-    <h1>Edit Task</h1>
+    <h1>Modification de la tâche</h1>
 
-    {{ include('./_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('./_form.html.twig', {'button_label': 'Modifier'}) }}
 
     <a href="{{ path('app_task_index') }}" class="btn btn-success mt-4">Retour à la liste</a>
 
