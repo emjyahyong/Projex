@@ -8,6 +8,34 @@
     {% block stylesheets %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+        <style>
+            /* Styles par défaut pour le mode clair */
+            body {
+                background-color: white;
+                color: black;
+            }
+
+            /* Styles pour le mode sombre */
+            body.dark-mode {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
+
+            .navbar.dark-mode {
+                background-color: #333333;
+            }
+
+            .btn-outline-secondary.dark-mode {
+                background-color: #444444;
+                border-color: #888888;
+                color: #ffffff;
+            }
+
+            .alert-dark-mode {
+                background-color: #444444;
+                color: #ffffff;
+            }
+        </style>
     {% endblock %}
 </head>
 <body>
@@ -34,11 +62,6 @@
                             <i class="bi bi-list-task"></i> Tâches
                         </a>
                     </li>
-                    {# <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_user_index') }}">
-                            <i class="bi bi-person"></i> Utilisateurs
-                        </a>
-                    </li> #}
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     {% if app.user %}
@@ -56,6 +79,12 @@
                             <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
                         </li>
                     {% endif %}
+                    <!-- Bouton pour basculer le mode sombre -->
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary" id="dark-mode-toggle">
+                            <i class="bi bi-moon"></i>
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -77,6 +106,26 @@
 
     {% block javascripts %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Vérifiez si un mode est déjà sauvegardé dans le localStorage
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.navbar').classList.add('dark-mode');
+            }
+
+            // Fonction pour activer/désactiver le mode sombre
+            const toggleDarkMode = () => {
+                document.body.classList.toggle('dark-mode');
+                document.querySelector('.navbar').classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                
+                // Enregistrer la préférence dans le localStorage
+                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            }
+
+            // Ajoutez un event listener au bouton pour basculer le mode
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        </script>
     {% endblock %}
 </body>
 </html>
